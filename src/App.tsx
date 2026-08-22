@@ -24,7 +24,7 @@ export default function App() {
           </Routes>
         </div>
       </div>
-      <BottomNav scale={headerHidden}/>
+      <BottomNav scale={headerHidden} scrollerRef={scrollerRef}/>
     </>
   )
 }

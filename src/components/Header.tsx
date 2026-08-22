@@ -5,7 +5,7 @@ interface HeaderProps {
   hidden: boolean
 }
 
-const DISMISS_DISTANCE_PX = 120
+const DISMISS_DISTANCE_PX = 300
 const FLICK_DISTANCE_PX = 50
 const FLICK_MAX_MS = 200
 

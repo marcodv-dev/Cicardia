@@ -190,6 +190,7 @@ button,input,select,textarea,.bottom-nav__link,a{
   left: 0;
   right: 0;
   bottom: 0;
+  height: 95%;
   z-index: 310;
   touch-action: none;
   background-color: #ffffff;

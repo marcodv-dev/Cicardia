@@ -1,14 +1,25 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import type { RefObject } from 'react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useTap } from '../hooks/useTap'
 
 interface BottomNavProps {
   scale: boolean
+  scrollerRef: RefObject<HTMLDivElement | null>
 }
 
-export default function BottomNav({ scale }: BottomNavProps) {
+export default function BottomNav({ scale, scrollerRef }: BottomNavProps) {
   const navigate = useNavigate()
-  const homeTap = useTap<HTMLAnchorElement>(() => navigate('/'))
-  const buttonTap = useTap<HTMLAnchorElement>(() => navigate('/button'))
+  const { pathname } = useLocation()
+  const homeTap = useTap<HTMLAnchorElement>(() => go('/'))
+  const buttonTap = useTap<HTMLAnchorElement>(() => go('/button'))
+
+  function go(to: string): void {
+    if (to === pathname) {
+      scrollerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    navigate(to)
+  }
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `bottom-nav__link${isActive ? ' bottom-nav__link--active' : ''}`
