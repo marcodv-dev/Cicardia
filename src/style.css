@@ -156,9 +156,6 @@ button,input,select,textarea,.bottom-nav__link,a{
 }
 
 .btn{
-  background-color: #4f46e5;
-  color: white;
-  border: 1px solid #443dc8;
   transition: all 0.2s ease;
 }
 .btn:active{
@@ -168,6 +165,11 @@ button,input,select,textarea,.bottom-nav__link,a{
   padding: 10px 20px;
   border-radius: 10px;
   font-size: 14px;
+}
+.btn.accent{
+  background-color: #4f46e5;
+  color: white;
+  border: 1px solid #443dc8;
 }
 
 .modal-backdrop {
