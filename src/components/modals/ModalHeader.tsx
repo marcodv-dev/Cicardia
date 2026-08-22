@@ -1,4 +1,4 @@
-import { useRef, type PointerEvent as ReactPointerEvent } from 'react'
+import { useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 
 interface DragState {
   startY: number
@@ -8,13 +8,15 @@ interface DragState {
 interface ModalHeaderProps {
   open: boolean
   onClose: () => void
+  title?: string
+  children?: ReactNode
 }
 
 const DISMISS_DISTANCE_PX = 300
 const FLICK_DISTANCE_PX = 50
 const FLICK_MAX_MS = 200
 
-export default function ModalHeader({ open, onClose }: ModalHeaderProps) {
+export default function ModalHeader({ open, onClose, title, children }: ModalHeaderProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
   const drag = useRef<DragState | null>(null)
 
@@ -66,7 +68,7 @@ export default function ModalHeader({ open, onClose }: ModalHeaderProps) {
       >
         <div className="bottom-modal__handle" />
         <div className="bottom-modal__head">
-          <h2 className="bottom-modal__title">Aggiungi</h2>
+          <h2 className="bottom-modal__title">{title ?? 'Aggiungi'}</h2>
           <button
             type="button"
             className="bottom-modal__close"
@@ -75,6 +77,7 @@ export default function ModalHeader({ open, onClose }: ModalHeaderProps) {
             ✕
           </button>
         </div>
+        {children}
       </div>
     </>
   )
