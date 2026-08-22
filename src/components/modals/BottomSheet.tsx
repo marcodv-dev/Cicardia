@@ -5,7 +5,7 @@ interface DragState {
   at: number
 }
 
-interface ModalHeaderProps {
+interface BottomSheetProps {
   open: boolean
   onClose: () => void
   title?: string
@@ -16,7 +16,7 @@ const DISMISS_DISTANCE_PX = 300
 const FLICK_DISTANCE_PX = 50
 const FLICK_MAX_MS = 200
 
-export default function ModalHeader({ open, onClose, title, children }: ModalHeaderProps) {
+export default function BottomSheet({ open, onClose, title, children }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
   const drag = useRef<DragState | null>(null)
 

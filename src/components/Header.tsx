@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ModalHeader from './modals/ModalHeader'
+import BottomSheet from './modals/BottomSheet'
 
 interface HeaderProps {
   hidden: boolean
@@ -16,7 +16,7 @@ export default function Header({ hidden }: HeaderProps) {
           Add
         </button>
       </header>
-      <ModalHeader open={open} onClose={() => setOpen(false)} />
+      <BottomSheet open={open} onClose={() => setOpen(false)} />
     </>
   )
 }
