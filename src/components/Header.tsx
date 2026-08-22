@@ -1,21 +1,12 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import ModalHeader from './modals/ModalHeader'
 
 interface HeaderProps {
   hidden: boolean
 }
 
-interface DragState {
-  startY: number
-  at: number
-}
-
 export default function Header({ hidden }: HeaderProps) {
   const [open, setOpen] = useState(false)
-  const sheetRef = useRef<HTMLDivElement | null>(null)
-  const drag = useRef<DragState | null>(null)
-
-  const close = (): void => setOpen(false)
 
   return (
     <>
@@ -25,7 +16,7 @@ export default function Header({ hidden }: HeaderProps) {
           Add
         </button>
       </header>
-      <ModalHeader open={open} drag={drag} sheetRef={sheetRef} close={close} />
+      <ModalHeader open={open} onClose={() => setOpen(false)} />
     </>
   )
 }

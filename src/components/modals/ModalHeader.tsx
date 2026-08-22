@@ -1,4 +1,4 @@
-import { type PointerEvent as ReactPointerEvent, type RefObject } from 'react'
+import { useRef, type PointerEvent as ReactPointerEvent } from 'react'
 
 interface DragState {
   startY: number
@@ -7,16 +7,17 @@ interface DragState {
 
 interface ModalHeaderProps {
   open: boolean
-  drag: RefObject<DragState | null>
-  sheetRef: RefObject<HTMLDivElement | null>
-  close: () => void
+  onClose: () => void
 }
 
 const DISMISS_DISTANCE_PX = 300
 const FLICK_DISTANCE_PX = 50
 const FLICK_MAX_MS = 200
 
-export default function ModalHeader({ open, drag, sheetRef, close }: ModalHeaderProps) {
+export default function ModalHeader({ open, onClose }: ModalHeaderProps) {
+  const sheetRef = useRef<HTMLDivElement | null>(null)
+  const drag = useRef<DragState | null>(null)
+
   const onSheetPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!open) return
     drag.current = { startY: e.clientY, at: Date.now() }
@@ -45,7 +46,7 @@ export default function ModalHeader({ open, drag, sheetRef, close }: ModalHeader
     el.style.transition = ''
     el.style.transform = ''
     if (dy > DISMISS_DISTANCE_PX || (dy > FLICK_DISTANCE_PX && duration < FLICK_MAX_MS)) {
-      close()
+      onClose()
     }
   }
 
@@ -53,7 +54,7 @@ export default function ModalHeader({ open, drag, sheetRef, close }: ModalHeader
     <>
       <div
         className={`modal-backdrop${open ? ' modal-backdrop--open' : ''}`}
-        onClick={close}
+        onClick={onClose}
       />
       <div
         ref={sheetRef}
@@ -69,7 +70,7 @@ export default function ModalHeader({ open, drag, sheetRef, close }: ModalHeader
           <button
             type="button"
             className="bottom-modal__close"
-            onClick={close}
+            onClick={onClose}
           >
             ✕
           </button>
