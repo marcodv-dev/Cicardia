@@ -1,4 +1,5 @@
 import { useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 
 interface DragState {
   startY: number
@@ -20,6 +21,7 @@ const KEYBOARD_SETTLE_MS = 400
 export default function BottomSheet({ open, onClose, title }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
   const drag = useRef<DragState | null>(null)
+  useBodyScrollLock(open)
 
   const onSheetPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!open) return
@@ -56,11 +58,6 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
   const settleSheet = (): void => {
     const el = sheetRef.current
     if (el) el.style.transition = 'none'
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0)
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-    })
     window.setTimeout(() => {
       if (sheetRef.current) sheetRef.current.style.transition = ''
     }, KEYBOARD_SETTLE_MS)
