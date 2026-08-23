@@ -11,7 +11,7 @@ export default function BottomNav({ scale, scrollerRef }: BottomNavProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const homeTap = useTap<HTMLAnchorElement>(() => go('/'))
-  const buttonTap = useTap<HTMLAnchorElement>(() => go('/button'))
+  const dashboardTap = useTap<HTMLAnchorElement>(() => go('/dashboard'))
 
   function go(to: string): void {
     if (to === pathname) {
@@ -25,7 +25,7 @@ export default function BottomNav({ scale, scrollerRef }: BottomNavProps) {
     `bottom-nav__link${isActive ? ' bottom-nav__link--active' : ''}`
 
   return (
-    <nav className={`bottom-nav${scale ? ' scale' : ''}`}>
+    <nav className={`bottom-nav ${scale ? ' scale' : ''}`}>
       <NavLink
         ref={homeTap.ref}
         to="/"
@@ -36,12 +36,12 @@ export default function BottomNav({ scale, scrollerRef }: BottomNavProps) {
         Home
       </NavLink>
       <NavLink
-        ref={buttonTap.ref}
-        to="/button"
+        ref={dashboardTap.ref}
+        to="/dashboard"
         className={linkClass}
-        onClick={buttonTap.guardedOnClick}
+        onClick={dashboardTap.guardedOnClick}
       >
-        Button
+        Dashboard
       </NavLink>
     </nav>
   )

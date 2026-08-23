@@ -5,7 +5,8 @@ import Header from './components/Header'
 import { useHideOnScroll } from './hooks/useHideOnScroll'
 import { useScrollRestoration } from './hooks/useScrollRestoration'
 import HomePage from './pages/HomePage'
-import ButtonPage from './pages/ButtonPage'
+import Dashboard from './pages/Dashboard'
+import DashboardBoxPage from './pages/DashboardBoxPage'
 
 export default function App() {
   const scrollerRef = useRef<HTMLDivElement | null>(null)
@@ -20,7 +21,8 @@ export default function App() {
         <div className="app-scroll" ref={scrollerRef}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/button" element={<ButtonPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboardBox/:boxId" element={<DashboardBoxPage />} />
           </Routes>
         </div>
       </div>

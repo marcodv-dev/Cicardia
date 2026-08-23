@@ -71,10 +71,10 @@ export default function BottomSheet({ open, onClose, title, children }: BottomSh
           <h2 className="bottom-modal__title">{title ?? 'Aggiungi'}</h2>
           <button
             type="button"
-            className="bottom-modal__close"
+            className="btn md shadow"
             onClick={onClose}
           >
-            ✕
+            esc
           </button>
         </div>
         {children}
