@@ -235,7 +235,7 @@ button,input,select,textarea,.bottom-nav__link,a{
   left: 0;
   right: 0;
   bottom: /* -50px */0;
-  top: env(safe-area-inset-top, 0px);
+  top: var(--safe-top, 0px);
   z-index: 310;
   touch-action: none;
   background-color: #ffffff;

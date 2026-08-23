@@ -1,5 +1,3 @@
-type IosNavigator = Navigator & { standalone?: boolean }
-
 function measureEnvTop(): number {
   const el = document.createElement('div')
   el.style.cssText =
@@ -10,16 +8,17 @@ function measureEnvTop(): number {
   return val
 }
 
-const isStandalone =
-  window.matchMedia('(display-mode: standalone)').matches ||
-  window.matchMedia('(display-mode: fullscreen)').matches ||
-  (window.navigator as IosNavigator).standalone === true
+function refreshSafeTop(): void {
+  const physicalGap = Math.max(0, window.screen.height - window.innerHeight)
+  const corrected = Math.max(0, measureEnvTop() - physicalGap)
+  document.documentElement.style.setProperty('--safe-top', `${corrected}px`)
+}
 
-const fallback = isStandalone
-  ? Math.max(0, window.screen.height - window.innerHeight)
-  : 0
-
-document.documentElement.style.setProperty(
-  '--safe-top',
-  `${Math.max(measureEnvTop(), fallback)}px`
-)
+refreshSafeTop()
+window.addEventListener('resize', refreshSafeTop)
+window.addEventListener('orientationchange', () => {
+  window.setTimeout(refreshSafeTop, 100)
+})
+window.addEventListener('load', () => {
+  window.setTimeout(refreshSafeTop, 300)
+})
