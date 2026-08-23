@@ -15,7 +15,6 @@ interface BottomSheetProps {
 const DISMISS_DISTANCE_PX = 300
 const FLICK_DISTANCE_PX = 50
 const FLICK_MAX_MS = 200
-const KEYBOARD_SETTLE_MS = 400
 
 export default function BottomSheet({ open, onClose, title }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
@@ -53,17 +52,12 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
     }
   }
 
-  const settleSheet = (): void => {
-    const el = sheetRef.current
-    if (el) el.style.transition = 'none'
+  const pinViewportOnFocus = (): void => {
     requestAnimationFrame(() => {
       window.scrollTo(0, 0)
       document.documentElement.scrollTop = 0
       document.body.scrollTop = 0
     })
-    window.setTimeout(() => {
-      if (sheetRef.current) sheetRef.current.style.transition = ''
-    }, KEYBOARD_SETTLE_MS)
   }
 
   return (
@@ -79,8 +73,7 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
         onPointerMove={onSheetPointerMove}
         onPointerUp={onSheetPointerUp}
         onPointerCancel={onSheetPointerUp}
-        onFocusCapture={settleSheet}
-        onBlurCapture={settleSheet}
+        onFocusCapture={pinViewportOnFocus}
       >
         <div className="bottom-modal-handle" />
         <div className="bottom-modal-head">
