@@ -30,7 +30,7 @@ export default function Dashboard() {
         {boxes.map((box) => (
           <div
             key={box.id}
-            className={`box shadow${pressedId === box.id ? ' box--pressed' : ''}`}
+            className={`box shadow${pressedId === box.id ? ' active' : ''}`}
             onClick={() => openBox(box.id)}
           >
             <label htmlFor={`box-${box.id}`}>{box.title}</label>
