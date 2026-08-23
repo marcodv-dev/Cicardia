@@ -18,15 +18,34 @@ const FLICK_MAX_MS = 200
 
 export default function BottomSheet({ open, onClose, title }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const drag = useRef<DragState | null>(null)
 
   useEffect(() => {
     if (!open) return
+    const lock = (): void => {
+      window.scrollTo(0, 0)
+    }
+    const b = document.body
     document.documentElement.style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
+    b.style.position = 'fixed'
+    b.style.top = '0'
+    b.style.left = '0'
+    b.style.right = '0'
+    b.style.width = '100%'
+    b.style.overflow = 'hidden'
+    window.addEventListener('scroll', lock)
+    window.visualViewport?.addEventListener('resize', lock)
     return () => {
       document.documentElement.style.overflow = ''
-      document.body.style.overflow = ''
+      b.style.position = ''
+      b.style.top = ''
+      b.style.left = ''
+      b.style.right = ''
+      b.style.width = ''
+      b.style.overflow = ''
+      window.removeEventListener('scroll', lock)
+      window.visualViewport?.removeEventListener('resize', lock)
     }
   }, [open])
 
@@ -90,7 +109,15 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
         <div className='bottom-modal-body'>
           <div className='bottom-modal-section'>
             <label htmlFor="" className='bottom-modal-lab'>input testo</label>
-            <input type="text" className='bottom-modal-input' />
+            <input
+              ref={inputRef}
+              type="text"
+              className='bottom-modal-input'
+              onPointerDown={(e) => {
+                e.preventDefault()
+                inputRef.current?.focus({ preventScroll: true })
+              }}
+            />
           </div>
         </div>
       </div>
