@@ -52,14 +52,6 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
     }
   }
 
-  const pinViewportOnFocus = (): void => {
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0)
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-    })
-  }
-
   return (
     <>
       <div
@@ -73,7 +65,6 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
         onPointerMove={onSheetPointerMove}
         onPointerUp={onSheetPointerUp}
         onPointerCancel={onSheetPointerUp}
-        onFocusCapture={pinViewportOnFocus}
       >
         <div className="bottom-modal-handle" />
         <div className="bottom-modal-head">
