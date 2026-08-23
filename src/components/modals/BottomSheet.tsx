@@ -16,7 +16,7 @@ const DISMISS_DISTANCE_PX = 300
 const FLICK_DISTANCE_PX = 50
 const FLICK_MAX_MS = 200
 
-export default function BottomSheet({ open, onClose, title, children }: BottomSheetProps) {
+export default function BottomSheet({ open, onClose, title }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
   const drag = useRef<DragState | null>(null)
 
@@ -52,6 +52,14 @@ export default function BottomSheet({ open, onClose, title, children }: BottomSh
     }
   }
 
+  const pinViewportOnFocus = (): void => {
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    })
+  }
+
   return (
     <>
       <div
@@ -65,10 +73,11 @@ export default function BottomSheet({ open, onClose, title, children }: BottomSh
         onPointerMove={onSheetPointerMove}
         onPointerUp={onSheetPointerUp}
         onPointerCancel={onSheetPointerUp}
+        onFocusCapture={pinViewportOnFocus}
       >
-        <div className="bottom-modal__handle" />
-        <div className="bottom-modal__head">
-          <h2 className="bottom-modal__title">{title ?? 'Aggiungi'}</h2>
+        <div className="bottom-modal-handle" />
+        <div className="bottom-modal-head">
+          <h2 className="bottom-modal-title">{title ?? 'Aggiungi'}</h2>
           <button
             type="button"
             className="btn md shadow"
@@ -77,7 +86,12 @@ export default function BottomSheet({ open, onClose, title, children }: BottomSh
             esc
           </button>
         </div>
-        {children}
+        <div className='bottom-modal-body'>
+          <div className='bottom-modal-section'>
+            <label htmlFor="" className='bottom-modal-lab'>input testo</label>
+            <input type="text" className='bottom-modal-input' />
+          </div>
+        </div>
       </div>
     </>
   )

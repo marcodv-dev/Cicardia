@@ -15,7 +15,7 @@ export default function DashboardBoxPage() {
 
   return (
     <main className="page">
-      <p>Qui il contenuto specifico del box {box.id}.</p>
+      <h1>Qui il contenuto specifico del box {box.id}.</h1>
     </main>
   )
 }

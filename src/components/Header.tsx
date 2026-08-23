@@ -20,6 +20,7 @@ export default function Header({ hidden }: HeaderProps) {
     <>
       <header
         className={`app-header${hidden ? ' app-header--hidden' : ''}${isBoxDetail ? ' app-header--detail' : ''}`}
+        style={{backgroundColor:`${box? box.color : ''}`}}
       >
         {isBoxDetail ? (
           <>
@@ -28,9 +29,10 @@ export default function Header({ hidden }: HeaderProps) {
               className="back-btn"
               onClick={() => navigate('/dashboard')}
             >
-              ←
+              {'<'}
             </button>
             <h1 className="app-header__title">{box?.title ?? 'Box'}</h1>
+            <div style={{width:36}}/>
           </>
         ) : (
           <>
