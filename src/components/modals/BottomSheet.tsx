@@ -1,5 +1,7 @@
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 
+import { useNoJumpFocus } from '../../hooks/useNoJumpFocus'
+
 interface DragState {
   startY: number
   at: number
@@ -18,7 +20,7 @@ const FLICK_MAX_MS = 200
 
 export default function BottomSheet({ open, onClose, title }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const inputNoJump = useNoJumpFocus()
   const drag = useRef<DragState | null>(null)
 
   useEffect(() => {
@@ -110,13 +112,9 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
           <div className='bottom-modal-section'>
             <label htmlFor="" className='bottom-modal-lab'>input testo</label>
             <input
-              ref={inputRef}
               type="text"
               className='bottom-modal-input'
-              onPointerDown={(e) => {
-                e.preventDefault()
-                inputRef.current?.focus({ preventScroll: true })
-              }}
+              {...inputNoJump}
             />
           </div>
         </div>
