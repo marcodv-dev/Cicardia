@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import BottomNav from './components/BottomNav'
 import Header from './components/Header'
 import { useHideOnScroll } from './hooks/useHideOnScroll'
@@ -12,6 +12,7 @@ export default function App() {
   const scrollerRef = useRef<HTMLDivElement | null>(null)
   const headerHidden = useHideOnScroll(scrollerRef)
   useScrollRestoration(scrollerRef)
+  const { pathname } = useLocation()
 
   return (
     <>
@@ -26,7 +27,9 @@ export default function App() {
           </Routes>
         </div>
       </div>
-      <BottomNav scale={headerHidden} scrollerRef={scrollerRef}/>
+      {!pathname.startsWith('/dashboardBox') && (
+        <BottomNav scale={headerHidden} scrollerRef={scrollerRef} />
+      )}
     </>
   )
 }
