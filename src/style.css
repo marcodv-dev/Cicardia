@@ -219,7 +219,7 @@ button,input,select,textarea,.bottom-nav__link,a{
   position: fixed;
   inset: 0;
   z-index: 300;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;

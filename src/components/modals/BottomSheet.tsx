@@ -1,4 +1,4 @@
-import { useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
+import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 
 interface DragState {
   startY: number
@@ -19,6 +19,16 @@ const FLICK_MAX_MS = 200
 export default function BottomSheet({ open, onClose, title }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
   const drag = useRef<DragState | null>(null)
+
+  useEffect(() => {
+    if (!open) return
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   const onSheetPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!open) return
