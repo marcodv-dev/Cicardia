@@ -234,8 +234,8 @@ button,input,select,textarea,.bottom-nav__link,a{
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 94%;
+  bottom: /* -50px */0;
+  top: 15%;
   z-index: 310;
   touch-action: none;
   background-color: #ffffff;
@@ -291,6 +291,7 @@ button,input,select,textarea,.bottom-nav__link,a{
 
 .bottom-modal-input{
   font-size: 16px;
+  padding: 8px 10px;
 }
 
 .grid{

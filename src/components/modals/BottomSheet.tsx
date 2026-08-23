@@ -30,6 +30,19 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
     }
   }, [open])
 
+  useEffect(() => {
+    if (!open) return
+    const el = sheetRef.current
+    if (!el) return
+    const h = window.innerHeight
+    el.style.height = `${Math.round(h * 0.95)}px`
+    el.style.top = `${Math.round(h * 0.05)}px`
+    return () => {
+      el.style.height = ''
+      el.style.top = ''
+    }
+  }, [open])
+
   const onSheetPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!open) return
     drag.current = { startY: e.clientY, at: Date.now() }
