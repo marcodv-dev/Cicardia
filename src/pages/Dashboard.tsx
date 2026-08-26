@@ -27,10 +27,10 @@ export default function Dashboard() {
     <main className="page">
       <h2>Griglia</h2>
       <div className="grid">
-        {boxes.map((box) => (
+        {boxes.map((box,i) => (
           <div
             key={box.id}
-            className={`box shadow ${pressedId === box.id ? ' active' : ''}`}
+            className={`box shadow ${pressedId === box.id ? ' active' : ''} ${i==0? 'double':''}`}
             onClick={() => openBox(box.id)}
             style={{backgroundColor:`${box.color}`}}
           >

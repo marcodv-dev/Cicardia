@@ -1,10 +1,8 @@
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 
-import { useNoJumpFocus } from '../../hooks/useNoJumpFocus'
-
 interface DragState {
   startY: number
-  at: number
+  samples: { y: number; t: number }[]
 }
 
 interface BottomSheetProps {
@@ -15,45 +13,84 @@ interface BottomSheetProps {
 }
 
 const DISMISS_DISTANCE_PX = 300
-const FLICK_DISTANCE_PX = 50
-const FLICK_MAX_MS = 200
+const FLICK_MIN_DISTANCE_PX = 24
+const FLICK_VELOCITY_PX_MS = 0.5
+const VELOCITY_WINDOW_MS = 100
+const KEYBOARD_MIN_LIFT_PX = 100
+const KB_MARGIN_PX = 16
+const INTERACTIVE_SELECTOR = 'input, textarea, select, button'
+const PICKER_INPUT_TYPES = new Set(['date', 'time', 'month', 'week', 'datetime-local', 'color', 'file'])
 
 export default function BottomSheet({ open, onClose, title }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement | null>(null)
-  const inputNoJump = useNoJumpFocus()
   const drag = useRef<DragState | null>(null)
+  const kbOverlapRef = useRef(0)
 
   useEffect(() => {
-    if (!open) return
-    const lock = (): void => {
-      window.scrollTo(0, 0)
-    }
-    const b = document.body
-    document.documentElement.style.overflow = 'hidden'
-    b.style.position = 'fixed'
-    b.style.top = '0'
-    b.style.left = '0'
-    b.style.right = '0'
-    b.style.width = '100%'
-    b.style.overflow = 'hidden'
-    window.addEventListener('scroll', lock)
-    window.visualViewport?.addEventListener('resize', lock)
-    return () => {
-      document.documentElement.style.overflow = ''
-      b.style.position = ''
-      b.style.top = ''
-      b.style.left = ''
-      b.style.right = ''
-      b.style.width = ''
-      b.style.overflow = ''
-      window.removeEventListener('scroll', lock)
-      window.visualViewport?.removeEventListener('resize', lock)
+    if (open) return
+    const active = document.activeElement
+    if (active instanceof HTMLElement && sheetRef.current?.contains(active)) {
+      active.blur()
     }
   }, [open])
 
+  useEffect(() => {
+    if (!open) return
+    const vv = window.visualViewport
+    const sheet = sheetRef.current
+    if (!vv || !sheet) return
+
+    const computeLift = (): number => {
+      const delta = window.innerHeight - vv.height
+      if (delta <= KEYBOARD_MIN_LIFT_PX) return 0
+      const active = document.activeElement
+      if (!(active instanceof HTMLElement) || !sheetRef.current?.contains(active)) {
+        return kbOverlapRef.current
+      }
+      const kbTop = delta + vv.offsetTop
+      const overlapNeeded = active.getBoundingClientRect().bottom + KB_MARGIN_PX - kbTop
+      if (overlapNeeded <= 0) return kbOverlapRef.current
+      return Math.min(delta, kbOverlapRef.current + Math.ceil(overlapNeeded))
+    }
+
+    const applyLift = (): void => {
+      kbOverlapRef.current = computeLift()
+      const el = sheetRef.current
+      if (el && !drag.current) {
+        el.style.transform = kbOverlapRef.current > 0 ? `translateY(-${kbOverlapRef.current}px)` : ''
+      }
+    }
+
+    vv.addEventListener('resize', applyLift)
+    sheet.addEventListener('focusin', applyLift)
+    applyLift()
+    return () => {
+      vv.removeEventListener('resize', applyLift)
+      sheet.removeEventListener('focusin', applyLift)
+      kbOverlapRef.current = 0
+      const el = sheetRef.current
+      if (el) el.style.transform = ''
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open, onClose])
+
   const onSheetPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!open) return
-    drag.current = { startY: e.clientY, at: Date.now() }
+    const control = (e.target as HTMLElement).closest(INTERACTIVE_SELECTOR)
+    if (control instanceof HTMLInputElement && !PICKER_INPUT_TYPES.has(control.type)) {
+      e.preventDefault()
+      control.focus({ preventScroll: true })
+      return
+    }
+    drag.current = { startY: e.clientY, samples: [{ y: e.clientY, t: performance.now() }] }
     const el = sheetRef.current
     if (el) {
       el.style.transition = 'none'
@@ -64,9 +101,13 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
   const onSheetPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
     const d = drag.current
     if (!d) return
+    d.samples.push({ y: e.clientY, t: performance.now() })
+    while (d.samples.length > 2 && last(d.samples).t - d.samples[0].t > VELOCITY_WINDOW_MS) {
+      d.samples.shift()
+    }
     const dy = Math.max(0, e.clientY - d.startY)
     const el = sheetRef.current
-    if (el) el.style.transform = `translateY(${dy}px)`
+    if (el) el.style.transform = `translateY(${dy - kbOverlapRef.current}px)`
   }
 
   const onSheetPointerUp = (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -75,22 +116,37 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
     const el = sheetRef.current
     if (!d || !el) return
     const dy = Math.max(0, e.clientY - d.startY)
-    const duration = Date.now() - d.at
+    const s = d.samples
+    const dt = last(s).t - s[0].t
+    const velocity = dt > 0 ? (last(s).y - s[0].y) / dt : 0
+    const dismiss =
+      dy > DISMISS_DISTANCE_PX || (dy > FLICK_MIN_DISTANCE_PX && velocity > FLICK_VELOCITY_PX_MS)
     el.style.transition = ''
-    el.style.transform = ''
-    if (dy > DISMISS_DISTANCE_PX || (dy > FLICK_DISTANCE_PX && duration < FLICK_MAX_MS)) {
+    if (dismiss) {
+      el.style.transform = ''
       onClose()
+    } else {
+      const rest = kbOverlapRef.current
+      el.style.transform = rest > 0 ? `translateY(-${rest}px)` : ''
     }
+  }
+
+  function last(samples: { y: number; t: number }[]) {
+    return samples[samples.length - 1]
   }
 
   return (
     <>
       <div
+        aria-hidden="true"
         className={`modal-backdrop${open ? ' modal-backdrop--open' : ''}`}
         onClick={onClose}
       />
       <div
         ref={sheetRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title ?? 'Aggiungi'}
         className={`bottom-modal${open ? ' bottom-modal--open' : ''}`}
         onPointerDown={onSheetPointerDown}
         onPointerMove={onSheetPointerMove}
@@ -114,7 +170,30 @@ export default function BottomSheet({ open, onClose, title }: BottomSheetProps) 
             <input
               type="text"
               className='bottom-modal-input'
-              {...inputNoJump}
+            />
+          </div>
+
+          <div className='bottom-modal-section'>
+            <label htmlFor="" className='bottom-modal-lab'>input testo</label>
+            <input
+              type="text"
+              className='bottom-modal-input'
+            />
+          </div>
+
+          <div className='bottom-modal-section'>
+            <label htmlFor="" className='bottom-modal-lab'>input testo</label>
+            <input
+              type="text"
+              className='bottom-modal-input'
+            />
+          </div>
+
+          <div className='bottom-modal-section'>
+            <label htmlFor="" className='bottom-modal-lab'>input testo</label>
+            <input
+              type="text"
+              className='bottom-modal-input'
             />
           </div>
         </div>

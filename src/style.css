@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
+:root {
+  --color-coral: lightcoral;
+  --color-blue: #4f46e5;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -36,7 +41,7 @@ body {
   display: none;
 }
 
-button,input,select,textarea,.bottom-nav__link,a{
+button,input,select,textarea,.bottom-nav__link,a,label{
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -51,7 +56,7 @@ button,input,select,textarea,.bottom-nav__link,a{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: lightcoral;
+  background-color: var(--color-coral);
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
@@ -92,23 +97,23 @@ button,input,select,textarea,.bottom-nav__link,a{
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 123px 20px 96px;
+  padding: 123px 20px calc(96px + var(--kb-height, 0px));
 }
 
 .bottom-nav {
   position: fixed;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
+  left: 25px;
+  right: 25px;
+  bottom: 25px;
   height: 65px;
-  width: calc(100% - 40px);
+  width: calc(100% - 50px);
   z-index: 200;
   display: flex;
   gap: 4px;
   padding: 6px;
-  background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid #ffffff;
   border-radius: 999px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -120,6 +125,40 @@ button,input,select,textarea,.bottom-nav__link,a{
   scale: 0.8;
 }
 
+.bottom-nav.hidden{
+  transform: translateY(calc(100% + 20px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bottom-nav__pill {
+  position: absolute;
+  z-index: 1;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  border-radius: 999px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  touch-action: none;
+  transition: transform 0.4s ease, width 0.4s ease, /* opacity 0.1s ease, */
+    background-color 0.01s ease, border-color 0.2s ease;
+}
+
+.bottom-nav__pill--hidden {
+  opacity: 0;
+  background: none;
+}
+
+.bottom-nav__pill--animating {
+  border-color: #dfdfdf;
+}
+
+.bottom-nav--dragging .bottom-nav__pill {
+  /* background-color: #eeeeee; */
+  border: 1px solid #dfdfdf;
+}
+
 .bottom-nav__link {
   touch-action: none;
   display: flex;
@@ -127,15 +166,23 @@ button,input,select,textarea,.bottom-nav__link,a{
   align-items: center;
   flex: 1;
   border-radius: 999px;
+  border: 1px solid transparent;
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
+  background-color: transparent;
   color: #555555;
+  transition: background-color 0.01s linear;
 }
 
 .bottom-nav__link--active {
-  background-color: #6366f1;
-  color: #ffffff;
+  background-color: #dfdfdfbb;
+  color: #000;
+}
+
+.bottom-nav--dragging .bottom-nav__link--active {
+  background-color: transparent;
+  color: #555555;
 }
 
 .card {
@@ -187,7 +234,7 @@ button,input,select,textarea,.bottom-nav__link,a{
 }
 
 #action-btn:hover {
-  background-color: #4f46e5;
+  background-color: var(--color-blue);
 }
 
 .btn{
@@ -207,12 +254,16 @@ button,input,select,textarea,.bottom-nav__link,a{
   font-size: 14px;
 }
 .btn.accent{
-  background-color: #4f46e5;
+  background-color: var(--color-blue);
   color: white;
   border: 1px solid #443dc8;
 }
 .btn.shadow{
-  box-shadow: 0 0 80px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.btn.half{
+  width: 50%;
+  margin: auto;
 }
 
 .modal-backdrop {
@@ -234,17 +285,26 @@ button,input,select,textarea,.bottom-nav__link,a{
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: calc(env(safe-area-inset-top, 0px) * 2 * (-1));
   /* top: 20%; */
-  height: calc(100dvh - env(safe-area-inset-top, 0px));
+  height: calc(100dvh + env(safe-area-inset-top, 0px));
   z-index: 310;
   touch-action: none;
+  overscroll-behavior: contain;
+  will-change: transform;
   background-color: #ffffff;
   border-radius: 40px 40px 0 0;
   box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.16);
   padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 0px));
   transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-modal,
+  .modal-backdrop {
+    transition: none;
+  }
 }
 
 .bottom-modal--open {
@@ -294,14 +354,15 @@ button,input,select,textarea,.bottom-nav__link,a{
 .bottom-modal-input{
   font-size: 16px;
   padding: 8px 10px;
+  color: #000;
+  outline: none;
 }
 
 .grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
-  margin: 1rem 0 2rem;
-  > *:first-child {
+  > *.double {
     grid-column: span 2;
     aspect-ratio: 2;
   }
@@ -348,7 +409,7 @@ button,input,select,textarea,.bottom-nav__link,a{
 .back-link{
   display: inline-block;
   margin-top: 16px;
-  color: #4f46e5;
+  color: var(--color-blue);
   text-decoration: none;
   font-size: 14px;
 }
@@ -367,4 +428,40 @@ button,input,select,textarea,.bottom-nav__link,a{
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
+}
+
+.grid-form{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 0 20px;
+  > *.double {
+    grid-column: span 2;
+  }
+}
+
+.form-section{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-input{
+  font-size: 16px;
+  padding: 8px 10px;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 10px;
+  color: #000;
+  outline: none;
+}
+
+/* Normalizza il widget nativo della data: senza questo alcuni engine
+   (Safari/Firefox) ignorano width e min-width sull'input date */
+.form-input[type="date"]{
+  -webkit-appearance: none;
+  appearance: none;
 }
