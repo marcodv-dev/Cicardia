@@ -1,53 +1,89 @@
-import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { boxes } from '../data/boxes'
-import BottomSheet from './modals/BottomSheet'
+import { CaretLeftIcon, PlusIcon } from "@phosphor-icons/react"
+import { useSave } from '../context/SaveContext'
 
-interface HeaderProps {
-  hidden: boolean
+const tabTitles: Record<string, string> = {
+  '/': 'Today',
+  '/dieta': 'Dieta',
+  '/dispensa': 'Dispensa',
+  '/spesa': 'Spesa',
 }
 
-export default function Header({ hidden }: HeaderProps) {
-  const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
+export default function Header() {
   const { pathname } = useLocation()
-  const isBoxDetail = pathname.startsWith('/dashboardBox')
-  const box = isBoxDetail
-    ? boxes.find((b) => b.id === Number(pathname.split('/')[2]))
-    : undefined
+  const navigate = useNavigate()
+  const { triggerSave } = useSave()
+  const isTemplateForm = pathname === '/pasti/nuovo' || pathname.endsWith('/modifica')
+  const isDettaglioPasto = /^\/pasti\/[^/]+$/.test(pathname)
+  const isNuovoAlimento = pathname === '/dispensa/nuovo'
+
+  let title = tabTitles[pathname] ?? 'Pasti di Casa'
+  let showBack = false
+  let rightAction: React.ReactNode = null
+
+  if (isNuovoAlimento) {
+    title = 'Nuovo alimento'
+    showBack = true
+    rightAction = (
+      <button className='btn accent md sc' type="button" onClick={triggerSave}>
+        Salva
+      </button>
+    )
+  } else if (isTemplateForm) {
+    title = pathname === '/pasti/nuovo' ? 'Nuovo pasto' : 'Modifica pasto'
+    showBack = true
+    rightAction = (
+      <button className='btn accent md sc' type="button" onClick={triggerSave}>
+        Salva
+      </button>
+    )
+  } else if (isDettaglioPasto) {
+    title = 'Dettagli pasto'
+    showBack = true
+    rightAction = (
+      <button className='btn accent md sc' type="button" onClick={() => navigate(`${pathname}/modifica`)}>
+        Modifica
+      </button>
+    )
+  } else if (pathname === '/spesa') {
+    rightAction = (
+      <button className='btn accent md sc' type="button" onClick={triggerSave}>
+        Salva
+      </button>
+    )
+  } else if (pathname === '/dieta') {
+    rightAction = (
+      <button className='btn accent sc circle' type="button" onClick={() => navigate('/pasti/nuovo')}>
+        <PlusIcon className='' size={36} weight="regular"/>
+      </button>
+    )
+  } else if (pathname === '/dispensa') {
+    rightAction = (
+      <button className='btn accent sc circle' type="button" onClick={() => navigate('/dispensa/nuovo')}>
+        <PlusIcon className='' size={36} weight="regular"/>
+      </button>
+    )
+  }
 
   return (
-    <>
-      <header
-        className={`app-header${hidden ? ' app-header--hidden' : ''}${isBoxDetail ? ' app-header--detail' : ''}`}
-        style={{backgroundColor:`${box? box.color : ''}`}}
-      >
-        {isBoxDetail ? (
-          <>
-            <button
-              type="button"
-              className="back-btn"
-              onClick={() => navigate('/dashboard')}
-            >
-              {'<'}
-            </button>
-            <h1 className="app-header__title">{box?.title ?? 'Box'}</h1>
-            <div style={{width:36}}/>
-          </>
-        ) : (
-          <>
-            <h1 className="app-header__title">Template PWA</h1>
-            <button
-              type="button"
-              className="btn md accent"
-              onClick={() => setOpen(true)}
-            >
-              Add
-            </button>
-          </>
-        )}
-      </header>
-      {!isBoxDetail && <BottomSheet open={open} onClose={() => setOpen(false)} />}
-    </>
+    <header className='header'>
+      {showBack ? (
+        <button className='btn glass circle' type="button" onClick={() => navigate(-1)}>
+          <CaretLeftIcon className='' size={36} weight="regular"/>
+        </button>
+      ) : (
+        <span />
+      )}
+      <div className='header-div'>
+        <h2 className={`header-title intel ${(title!='Today'&&title!='Dieta'&&title!='Dispensa'&&title!='Spesa')&&'sm'}`}>{title}</h2>
+        {title=='Today'&&<label className='header-subtitle intel' htmlFor="">· {new Date().toLocaleDateString('it-IT', {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short'
+        })}</label>}
+      </div>
+
+      {rightAction ?? <span />}
+    </header>
   )
 }

@@ -9,14 +9,14 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Template PWA Moderna',
-        short_name: 'PWA',
-        description: 'Template PWA vuota basata su Vite + TypeScript',
+        name: 'Pasti di Casa',
+        short_name: 'Pasti',
+        description: 'Dieta + Dispensa + Spesa — tutto offline',
         lang: 'it',
         start_url: '/',
         display: 'standalone',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#0E0F0C',
+        background_color: '#0E0F0C',
         icons: [
           {
             src: 'pwa-192x192.png',

@@ -1,41 +1,48 @@
-import { useRef } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
-import BottomNav from './components/BottomNav'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/Header'
-import { useHideOnScroll } from './hooks/useHideOnScroll'
-import { useAnyInputFocused } from './hooks/useAnyInputFocused'
-import { useKeyboardOpen } from './hooks/useKeyboardOpen'
-import { useScrollRestoration } from './hooks/useScrollRestoration'
-import HomePage from './pages/HomePage'
-import Dashboard from './pages/Dashboard'
-import DashboardBoxPage from './pages/DashboardBoxPage'
-import Form from './pages/Form'
+import BottomNav from './components/BottomNav'
+import Oggi from './pages/Oggi'
+import Dieta from './pages/Dieta'
+import Dispensa from './pages/Dispensa'
+import Spesa from './pages/Spesa'
+import DettaglioPasto from './pages/DettaglioPasto'
+import TemplateForm from './pages/TemplateForm'
+import NuovoAlimento from './pages/NuovoAlimento'
+import { useDeviceOrientation } from './hooks/useDeviceOrientation'
+import { SaveProvider } from './context/SaveContext'
+import { ToastProvider } from './context/ToastContext'
+
+const TAB_ROUTES = ['/', '/dieta', '/dispensa', '/spesa']
 
 export default function App() {
-  const scrollerRef = useRef<HTMLDivElement | null>(null)
-  const headerHidden = useHideOnScroll(scrollerRef)
-  const keyboardOpen = useKeyboardOpen()
-  const inputFocused = useAnyInputFocused()
-  useScrollRestoration(scrollerRef)
   const { pathname } = useLocation()
+  const isTab = TAB_ROUTES.includes(pathname)
+  const { needsPrompt, requestPermission } = useDeviceOrientation()
 
   return (
-    <>
-      <div className={`statusbar-veil${headerHidden ? ' statusbar-veil--visible' : ''}`} />
-      <Header hidden={headerHidden} />
-      <div className="app-shell">
-        <div className="app-scroll" ref={scrollerRef}>
+    <ToastProvider>
+      <SaveProvider>
+        {needsPrompt && (
+          <button className="parallax-prompt" onClick={requestPermission} type="button">
+            Attiva movimento
+          </button>
+        )}
+        <Header />
+        <div className='statusbar-veil'/>
+        <main className='app-shell'>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboardBox/:boxId" element={<DashboardBoxPage />} />
-            <Route path="/form" element={<Form />} />
+            <Route path="/" element={<Oggi />} />
+            <Route path="/dieta" element={<Dieta />} />
+            <Route path="/dispensa" element={<Dispensa />} />
+            <Route path="/spesa" element={<Spesa />} />
+            <Route path="/pasti/nuovo" element={<TemplateForm />} />
+            <Route path="/pasti/:id/modifica" element={<TemplateForm />} />
+            <Route path="/pasti/:id" element={<DettaglioPasto />} />
+            <Route path="/dispensa/nuovo" element={<NuovoAlimento />} />
           </Routes>
-        </div>
-      </div>
-      {!pathname.startsWith('/dashboardBox') && (
-        <BottomNav scale={headerHidden} hidden={keyboardOpen || inputFocused} scrollerRef={scrollerRef} />
-      )}
-    </>
+        </main>
+        {isTab && <BottomNav />}
+      </SaveProvider>
+    </ToastProvider>
   )
 }
