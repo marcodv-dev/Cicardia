@@ -42,7 +42,7 @@ export default function NuovoAlimento() {
     >
       <div className='page-section'>
         <label className='page-title intel'>Nome</label>
-        <input className='page-input' type="text" placeholder="Alimento" value={name} onChange={e => setName(e.target.value)} />
+        <input className='page-input' type="text" placeholder="Alimento..." value={name} onChange={e => setName(e.target.value)} />
       </div>
       <div className='page-section'>
         <div style={{display:'flex',gap:5,alignItems:'center'}}>

@@ -66,7 +66,6 @@ export default function Spesa() {
       {items.length === 0 ? (
         <div style={{paddingTop:120,display:'flex',flexDirection:'column',gap:20,alignItems:'center'}}>
           <p className='page-title intel'>Niente da comprare</p>
-          <p className='page-title intel'>Tutto in casa</p>
         </div>
       ) : (
         <>
