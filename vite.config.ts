@@ -7,10 +7,10 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['logo-cicardia.svg'],
       manifest: {
-        name: 'Pasti di Casa',
-        short_name: 'Pasti',
+        name: 'Cicardia',
+        short_name: 'Cicardia',
         description: 'Dieta + Dispensa + Spesa — tutto offline',
         lang: 'it',
         start_url: '/',

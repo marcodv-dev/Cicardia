@@ -41,7 +41,8 @@ export default function App() {
             <Route path="/dispensa/nuovo" element={<NuovoAlimento />} />
           </Routes>
         </main>
-        {isTab && <BottomNav />}
+        {/* {isTab && <BottomNav isTab={isTab}/>} */}
+        <BottomNav isTab={isTab}/>
       </SaveProvider>
     </ToastProvider>
   )

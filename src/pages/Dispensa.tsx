@@ -77,8 +77,8 @@ export default function Dispensa() {
       style={{paddingBottom:100}}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3, ease: 'easeIn' }}
+      exit={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: 'easeIn' }}
     >
       <div className='page-section'>
         <div className='page-input'>
@@ -110,7 +110,7 @@ export default function Dispensa() {
           </div>
         ))}
       </div>
-      {filtered.length === 0 && <p className='p-empty-page intel'>Nessun ingrediente</p>}
+      {filtered.length === 0 && <p className='p-empty-page intel' style={{textAlign:'center'}}>Nessun ingrediente</p>}
 
       {confirmId && createPortal(
         <div className='modal-overlay' onClick={() => setConfirmId(null)}>

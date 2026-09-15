@@ -17,7 +17,7 @@ export default function Header() {
   const isDettaglioPasto = /^\/pasti\/[^/]+$/.test(pathname)
   const isNuovoAlimento = pathname === '/dispensa/nuovo'
 
-  let title = tabTitles[pathname] ?? 'Pasti di Casa'
+  let title = tabTitles[pathname] ?? 'Cicardia'
   let showBack = false
   let rightAction: React.ReactNode = null
 

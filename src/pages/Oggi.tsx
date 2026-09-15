@@ -45,9 +45,13 @@ export default function Oggi() {
         className='page empty'
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3, ease: 'easeIn' }}
+        exit={{ opacity: 1 }}
+        transition={{ duration: 0.2, ease: 'easeIn' }}
       >
+        <div style={{display:'flex',flexDirection:'column',width:'50%',color:'#F3F0E7'}}>
+          <img src="/logo-cicardia.svg" alt="" />
+          <label className='title-empty-page'>cicardia</label>
+        </div>
         <p className='p-empty-page intel'>Nessun pasto in programma</p>
         <p className='p-empty-page intel'>Crea la tua dieta</p>
         <CaretDoubleDownIcon className='goDietaArrow' size={60} weight="regular" />
@@ -61,8 +65,8 @@ export default function Oggi() {
         className='page empty'
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3, ease: 'easeIn' }}
+        exit={{ opacity: 1 }}
+        transition={{ duration: 0.2, ease: 'easeIn' }}
       >
         <p className='page-title intel'>Pasti finiti</p>
         <p className='page-title intel'>Completati oggi {completedToday.length}/{todayOccurrences.length}</p>
@@ -73,11 +77,11 @@ export default function Oggi() {
   return (
     <motion.section 
       className='page today'
-      style={{paddingBottom:80}}
+      style={{paddingBottom:100}}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3, ease: 'easeIn' }}
+      exit={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: 'easeIn' }}
     >
       {next && (
         <div className='page-section'>

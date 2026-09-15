@@ -3,7 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     html {
-        background-color: var(--surface-white);
+        background-color: #0E0F0C;
         overflow: hidden;
     }
     body {
@@ -121,6 +121,7 @@
     font-size: 1.2rem;
 }
 .header-subtitle{
+    margin-top: auto;
     font-size: 1rem;
     font-weight: 400;
     color: #A6A6A6;
@@ -152,7 +153,14 @@
     align-items: center;
     color: #A6A6A6;
 }
+.title-empty-page{
+    font-size: 40px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+}
 .p-empty-page{
+    color: #A6A6A6;
     font-size: 1rem;
     font-weight: 400;
 }
@@ -168,9 +176,18 @@
 }
 .goDietaArrow{
     position: absolute;
-    bottom: 50px;
-    left: calc(100% * 0.375);
+    bottom: 60px;
+    left: calc(37.5% + ((50px * 0.625) - 25px));
     transform: translateX(-50%);
+    animation: bounce 1.2s cubic-bezier(0.3, 0.5, 0.5, 1) infinite;
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-16px);
+  }
 }
 
 .page-section{
@@ -218,7 +235,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    padding: 10px 20px;
+    padding: 10px 20px 20px;
 }
 .page-alimento{
     width: 100%;
@@ -372,9 +389,9 @@
 
 .nav{
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
+    bottom: 25px;
+    left: 25px;
+    right: 25px;
     height: 80px;
     display: flex;
     border-radius: 999px;
@@ -385,12 +402,29 @@
     background-color: rgba(36, 36, 36, 0.464);
     border-top: 0.5px solid rgba(255, 255, 255, 0.3);
 }
+.nav.hide{
+    display: none;
+}
+.nav-indicator{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 10px;
+    background-color: rgba(81, 81, 81, 0.5);
+    transition: left 0.3s ease, width 0.3s ease;
+    z-index: 0;
+}
+.nav-indicator.no-transition{
+    transition: none;
+}
 .nav-item{
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
+    z-index: 1;
 
     background: none;
     border-radius: 10px;
@@ -399,8 +433,8 @@
     font-size: 12px;
 }
 .nav-item.active {
-  background-color: rgba(81, 81, 81, 0.671);
     color: #F3F0E7;
+    color: #0088ff;
 }
 
 .btn{
