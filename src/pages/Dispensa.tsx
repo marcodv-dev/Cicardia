@@ -110,7 +110,7 @@ export default function Dispensa() {
           </div>
         ))}
       </div>
-      {filtered.length === 0 && <p className='p-empty-page intel' style={{textAlign:'center'}}>Nessun ingrediente</p>}
+      {filtered.length === 0 && <p className='p-empty-page intel' style={{textAlign:'center'}}>Nessun alimento</p>}
 
       {confirmId && createPortal(
         <div className='modal-overlay' onClick={() => setConfirmId(null)}>

@@ -242,7 +242,7 @@ export default function TemplateForm() {
             className='page-input'
             style={{flex:1}}
             type="text"
-            placeholder="Aggiungi ingrediente..."
+            placeholder="Aggiungi alimento..."
             value={ingredientInput}
             onChange={e => setIngredientInput(e.target.value)}
             onKeyDown={e => {
