@@ -1,31 +1,3 @@
 .nav-item.active {
   background-color: #da47ff;
 }
-
-.parallax-bg {
-  position: fixed;
-  inset: -20px;
-  z-index: -1;
-  background-image: url(/sfondo-parallax.jpeg);
-  background-size: cover;
-  background-position: center;
-  filter: blur(8px);
-  will-change: transform;
-  pointer-events: none;
-}
-
-.parallax-prompt {
-  position: fixed;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 500;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 999px;
-  background-color: #da47ff;
-  color: #0E0F0C;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}

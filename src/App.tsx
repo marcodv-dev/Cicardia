@@ -8,7 +8,6 @@ import Spesa from './pages/Spesa'
 import DettaglioPasto from './pages/DettaglioPasto'
 import TemplateForm from './pages/TemplateForm'
 import NuovoAlimento from './pages/NuovoAlimento'
-import { useDeviceOrientation } from './hooks/useDeviceOrientation'
 import { SaveProvider } from './context/SaveContext'
 import { ToastProvider } from './context/ToastContext'
 
@@ -17,16 +16,9 @@ const TAB_ROUTES = ['/', '/dieta', '/dispensa', '/spesa']
 export default function App() {
   const { pathname } = useLocation()
   const isTab = TAB_ROUTES.includes(pathname)
-  const { needsPrompt, requestPermission } = useDeviceOrientation()
-
   return (
     <ToastProvider>
       <SaveProvider>
-        {needsPrompt && (
-          <button className="parallax-prompt" onClick={requestPermission} type="button">
-            Attiva movimento
-          </button>
-        )}
         <Header />
         <div className='statusbar-veil'/>
         <main className='app-shell'>
