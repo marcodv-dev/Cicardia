@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import BottomNav from './components/BottomNav'
@@ -16,15 +17,16 @@ const TAB_ROUTES = ['/', '/dieta', '/dispensa', '/spesa']
 export default function App() {
   const { pathname } = useLocation()
   const isTab = TAB_ROUTES.includes(pathname)
+  const [showDietaModal, setShowDietaModal] = useState(false)
   return (
     <ToastProvider>
       <SaveProvider>
-        <Header />
+        <Header onDietaExport={() => setShowDietaModal(true)} />
         <div className='statusbar-veil'/>
         <main className='app-shell'>
           <Routes>
             <Route path="/" element={<Oggi />} />
-            <Route path="/dieta" element={<Dieta />} />
+            <Route path="/dieta" element={<Dieta showModal={showDietaModal} onCloseModal={() => setShowDietaModal(false)} />} />
             <Route path="/dispensa" element={<Dispensa />} />
             <Route path="/spesa" element={<Spesa />} />
             <Route path="/pasti/nuovo" element={<TemplateForm />} />

@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CaretLeftIcon, PlusIcon } from "@phosphor-icons/react"
+import { CaretLeftIcon, ListIcon, PlusIcon, RadioButtonIcon } from "@phosphor-icons/react"
 import { useSave } from '../context/SaveContext'
 
 const tabTitles: Record<string, string> = {
@@ -9,7 +9,7 @@ const tabTitles: Record<string, string> = {
   '/spesa': 'Spesa',
 }
 
-export default function Header() {
+export default function Header({ onDietaExport }: { onDietaExport?: () => void } = {}) {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { triggerSave } = useSave()
@@ -53,9 +53,14 @@ export default function Header() {
     )
   } else if (pathname === '/dieta') {
     rightAction = (
-      <button className='btn accent sc circle' type="button" onClick={() => navigate('/pasti/nuovo')}>
-        <PlusIcon className='' size={36} weight="regular"/>
-      </button>
+      <div style={{display:'flex',gap:8}}>
+        <button className='btn glass sc circle' type="button" onClick={onDietaExport}>
+          <ListIcon className='' size={36} weight="regular"/>
+        </button>
+        <button className='btn accent sc circle' type="button" onClick={() => navigate('/pasti/nuovo')}>
+          <PlusIcon className='' size={36} weight="regular"/>
+        </button>
+      </div>
     )
   } else if (pathname === '/dispensa') {
     rightAction = (
