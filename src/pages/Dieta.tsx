@@ -102,7 +102,8 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
 
     const newTemplates: MealTemplate[] = []
     const newIngredients: Ingredient[] = []
-    const existingIngredientIds = new Set(data.ingredients.map((i: Ingredient) => i.id))
+    const dbIngredients = await db.ingredients.toArray()
+    const existingIngredientIds = new Set(dbIngredients.map(i => i.id))
 
     for (const t of data.mealTemplates as MealTemplate[]) {
       const key = `${t.title}__${t.tipo}`
