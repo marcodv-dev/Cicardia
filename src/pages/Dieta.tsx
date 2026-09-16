@@ -28,6 +28,7 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
   const [loaded, setLoaded] = useState(false)
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [fadingModal, setFadingModal] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -36,6 +37,14 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
       setLoaded(true)
     })
   }, [])
+
+  function closeFade(id: string, cb: () => void) {
+    setFadingModal(id)
+    setTimeout(() => {
+      setFadingModal(null)
+      cb()
+    }, 200)
+  }
 
   async function deleteTemplate(id: string) {
     const deleted = await db.mealTemplates.get(id)
@@ -68,7 +77,7 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
     a.download = 'dieta-cicardia.json'
     a.click()
     URL.revokeObjectURL(url)
-    onCloseModal()
+    closeFade('modal', onCloseModal)
     toast('Dieta esportata')
   }
 
@@ -127,7 +136,7 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
 
     const refreshed = await db.mealTemplates.toArray()
     setTemplates(refreshed)
-    onCloseModal()
+    closeFade('modal', onCloseModal)
     toast(`Importati ${newTemplates.length} pasti`)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -136,8 +145,10 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
     await db.mealTemplates.clear()
     await db.ingredients.clear()
     setTemplates([])
-    setShowDeleteConfirm(false)
-    onCloseModal()
+    closeFade('delete', () => {
+      setShowDeleteConfirm(false)
+      onCloseModal()
+    })
     toast('Dieta eliminata')
   }
 
@@ -164,13 +175,12 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
         <input ref={fileInputRef} type="file" accept=".json" style={{display:'none'}} onChange={importDieta} />
 
         {showModal && createPortal(
-          <div className='modal-overlay' onClick={onCloseModal}>
+          <div className={`modal-overlay${fadingModal === 'modal' ? ' fade-out' : ''}`} onClick={() => closeFade('modal', onCloseModal)}>
             <div className='modal' onClick={e => e.stopPropagation()}>
-              <h3 className='card-title'>Dieta</h3>
               <div className='modal-actions' style={{flexDirection:'column'}}>
-                <button className='btn accent lg sc' type="button" onClick={() => fileInputRef.current?.click()}>Importa dieta</button>
+                <button className='btn glass lg sc' type="button" onClick={() => fileInputRef.current?.click()}>Importa dieta</button>
                 <button className='btn glass lg sc' type="button" onClick={exportDieta}>Esporta dieta</button>
-                <button className='btn danger lg sc' type="button" onClick={() => { setShowDeleteConfirm(true) }}>Elimina dieta</button>
+                <button className='btn danger lg sc' style={{zIndex:10}} type="button" onClick={() => { setShowDeleteConfirm(true) }}>Elimina dieta</button>
               </div>
             </div>
           </div>,
@@ -178,12 +188,12 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
         )}
 
         {showDeleteConfirm && createPortal(
-          <div className='modal-overlay' onClick={() => setShowDeleteConfirm(false)}>
+          <div className={`modal-overlay${fadingModal === 'delete' ? ' fade-out' : ''}`} onClick={() => closeFade('delete', () => setShowDeleteConfirm(false))}>
             <div className='modal' onClick={e => e.stopPropagation()}>
               <h3 className='card-title'>Conferma</h3>
               <p className='modal-text'>Eliminare tutta la dieta?</p>
               <div className='modal-actions'>
-                <button className='btn glass md' type="button" onClick={() => setShowDeleteConfirm(false)}>Annulla</button>
+                <button className='btn glass md' type="button" onClick={() => closeFade('delete', () => setShowDeleteConfirm(false))}>Annulla</button>
                 <button className='btn accent md' type="button" onClick={eliminaDieta}>Conferma</button>
               </div>
             </div>
@@ -243,12 +253,12 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
       ))}
 
       {confirmId && createPortal(
-        <div className='modal-overlay' onClick={() => setConfirmId(null)}>
+        <div className={`modal-overlay${fadingModal === 'single' ? ' fade-out' : ''}`} onClick={() => closeFade('single', () => setConfirmId(null))}>
           <div className='modal' onClick={e => e.stopPropagation()}>
             <h3 className='card-title' style={{paddingLeft:10}}>Conferma</h3>
             <p className='modal-text'>Eliminare questo pasto?</p>
             <div className='modal-actions'>
-              <button className='btn glass md' type="button" onClick={() => setConfirmId(null)}>
+              <button className='btn glass md' type="button" onClick={() => closeFade('single', () => setConfirmId(null))}>
                 Annulla
               </button>
               <button className='btn accent md' type="button" onClick={() => deleteTemplate(confirmId)}>
@@ -263,12 +273,12 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
       <input ref={fileInputRef} type="file" accept=".json" style={{display:'none'}} onChange={importDieta} />
 
       {showModal && createPortal(
-        <div className='modal-overlay' onClick={onCloseModal}>
+        <div className={`modal-overlay${fadingModal === 'modal' ? ' fade-out' : ''}`} onClick={() => closeFade('modal', onCloseModal)}>
           <div className='modal' onClick={e => e.stopPropagation()}>
             <div className='modal-actions' style={{flexDirection:'column',marginTop:'0px',gap:20}}>
               <button className='btn glass lg sc' type="button" onClick={() => fileInputRef.current?.click()}> Importa dieta</button>
               <button className='btn glass lg sc' type="button" onClick={exportDieta}> Esporta dieta</button>
-              <button className='btn danger lg sc' type="button" onClick={() => { setShowDeleteConfirm(true) }}> Elimina dieta</button>
+              <button className='btn danger lg sc' style={{zIndex:10}} type="button" onClick={() => { setShowDeleteConfirm(true) }}> Elimina dieta</button>
             </div>
           </div>
         </div>,
@@ -276,12 +286,12 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
       )}
 
       {showDeleteConfirm && createPortal(
-        <div className='modal-overlay' onClick={() => setShowDeleteConfirm(false)}>
+        <div className={`modal-overlay${fadingModal === 'delete' ? ' fade-out' : ''}`} onClick={() => closeFade('delete', () => setShowDeleteConfirm(false))}>
           <div className='modal' onClick={e => e.stopPropagation()}>
             <h3 className='card-title' style={{paddingLeft:10}}>Conferma</h3>
             <p className='modal-text'>Eliminare tutta la dieta?</p>
             <div className='modal-actions'>
-              <button className='btn glass md' type="button" onClick={() => setShowDeleteConfirm(false)}>Annulla</button>
+              <button className='btn glass md' type="button" onClick={() => closeFade('delete', () => setShowDeleteConfirm(false))}>Annulla</button>
               <button className='btn accent md' type="button" onClick={eliminaDieta}>Conferma</button>
             </div>
           </div>

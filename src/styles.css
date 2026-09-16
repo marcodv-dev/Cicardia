@@ -309,6 +309,18 @@ button, input, select, textarea, .bottom-nav__link, a, label {
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: fadeIn 0.2s ease;
+}
+.modal-overlay.fade-out{
+    animation: fadeOut 0.2s ease forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 .modal{
     border-radius: 40px;
@@ -463,8 +475,8 @@ button, input, select, textarea, .bottom-nav__link, a, label {
     background-origin: border-box;
     background-clip: padding-box, border-box;
     background-image: 
-        linear-gradient(#8b0000aa, #ffffff00), 
-        linear-gradient(180deg, #ff0000d4, #e00000d2);
+        linear-gradient(#9c0000, #ffffff17), 
+        linear-gradient(180deg, #ff0000, #e0000089);
     color: #f3f0e7;
 }
 .btn.alim{

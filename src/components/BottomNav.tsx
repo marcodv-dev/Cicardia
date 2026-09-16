@@ -31,7 +31,7 @@ export default function BottomNav({isTab} : { isTab: boolean }) {
         left: activeItem.offsetLeft,
         width: activeItem.offsetWidth,
       })
-      if (!ready) setReady(true)
+      if (!ready) requestAnimationFrame(() => setReady(true))
     }
   }, [activeIndex])
 
