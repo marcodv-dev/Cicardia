@@ -99,11 +99,10 @@ button, input, select, textarea, .bottom-nav__link, a, label {
   left: 0;
   right: 0;
   height: calc(70px + env(safe-area-inset-top, 0px));
-  z-index: 90;
+  z-index: 99;
   background: linear-gradient(to top, #0E0F0C00 0%, #0e0f0c66 10%, #0e0f0caa 20%, #0E0F0C 100%);
   opacity: 1;
   pointer-events: none;
-  z-index: 99;
 }
 
 .page{
@@ -306,7 +305,7 @@ button, input, select, textarea, .bottom-nav__link, a, label {
     z-index: 1000;
     background: rgba(0,0,0,0.5);
     backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -400,7 +399,6 @@ button, input, select, textarea, .bottom-nav__link, a, label {
     font-size: 12px;
 }
 .nav-item.active {
-    color: #F3F0E7;
     color: #0088ff;
 }
 

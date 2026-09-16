@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../db'
@@ -168,9 +168,9 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
             <div className='modal' onClick={e => e.stopPropagation()}>
               <h3 className='card-title'>Dieta</h3>
               <div className='modal-actions' style={{flexDirection:'column'}}>
-                <button className='btn accent lg' type="button" onClick={() => fileInputRef.current?.click()}>Importa dieta</button>
-                <button className='btn glass lg' type="button" onClick={exportDieta}>Esporta dieta</button>
-                <button className='btn accent lg' type="button" onClick={() => { setShowDeleteConfirm(true) }}>Elimina dieta</button>
+                <button className='btn accent lg sc' type="button" onClick={() => fileInputRef.current?.click()}>Importa dieta</button>
+                <button className='btn glass lg sc' type="button" onClick={exportDieta}>Esporta dieta</button>
+                <button className='btn danger lg sc' type="button" onClick={() => { setShowDeleteConfirm(true) }}>Elimina dieta</button>
               </div>
             </div>
           </div>,
@@ -204,8 +204,8 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
       transition={{ duration: 0.2, ease: 'easeIn' }}
     >
       {grouped.map(({ tipo, label, items }) => (
-        <>
-        {items.length !== 0&&<div key={tipo} className='page-section'>
+        <Fragment key={tipo}>
+        {items.length !== 0&&<div className='page-section'>
           <h3 className='page-title intel'>{label}</h3>
           {items.map(t => (
             <div 
@@ -239,7 +239,7 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
             </div>
           ))}
         </div>}
-        </>
+        </Fragment>
       ))}
 
       {confirmId && createPortal(
@@ -267,7 +267,7 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
           <div className='modal' onClick={e => e.stopPropagation()}>
             <div className='modal-actions' style={{flexDirection:'column',marginTop:'0px',gap:20}}>
               <button className='btn accent lg sc' type="button" onClick={() => fileInputRef.current?.click()}> Importa dieta</button>
-              <button className='btn accent lg sc' type="button" onClick={exportDieta}> Esporta dieta</button>
+              <button className='btn glass lg sc' type="button" onClick={exportDieta}> Esporta dieta</button>
               <button className='btn danger lg sc' type="button" onClick={() => { setShowDeleteConfirm(true) }}> Elimina dieta</button>
             </div>
           </div>

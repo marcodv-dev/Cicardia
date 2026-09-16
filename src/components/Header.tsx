@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CaretLeftIcon, ListIcon, PlusIcon, RadioButtonIcon } from "@phosphor-icons/react"
+import { CaretLeftIcon, ListIcon, PlusIcon } from "@phosphor-icons/react"
 import { useSave } from '../context/SaveContext'
 
 const tabTitles: Record<string, string> = {

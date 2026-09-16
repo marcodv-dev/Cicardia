@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import BottomNav from './components/BottomNav'
@@ -18,6 +18,10 @@ export default function App() {
   const { pathname } = useLocation()
   const isTab = TAB_ROUTES.includes(pathname)
   const [showDietaModal, setShowDietaModal] = useState(false)
+
+  useEffect(() => {
+    setShowDietaModal(false)
+  }, [pathname])
   return (
     <ToastProvider>
       <SaveProvider>
@@ -35,7 +39,6 @@ export default function App() {
             <Route path="/dispensa/nuovo" element={<NuovoAlimento />} />
           </Routes>
         </main>
-        {/* {isTab && <BottomNav isTab={isTab}/>} */}
         <BottomNav isTab={isTab}/>
       </SaveProvider>
     </ToastProvider>

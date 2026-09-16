@@ -4,7 +4,7 @@ import { db } from '../db'
 import type { MealTipo, Recurrence } from '../lib/types'
 import { checkOverlap } from '../lib/recurrence'
 import { XIcon } from '@phosphor-icons/react'
-import { Check } from 'phosphor-react'
+import { CheckIcon } from '@phosphor-icons/react'
 import { useSave } from '../context/SaveContext'
 import { useToast } from '../context/ToastContext'
 import { motion } from 'framer-motion'
@@ -253,7 +253,7 @@ export default function TemplateForm() {
             }}
           />
           <button className='btn sm accent sc circle' type="button" onClick={() => addIngredient(ingredientInput)}>
-            <Check className='' size={30} weight="regular"/>
+            <CheckIcon className='' size={30} weight="regular"/>
           </button>
         </div>
         {suggestions.length > 0 && (
