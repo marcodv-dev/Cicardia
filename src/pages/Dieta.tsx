@@ -266,7 +266,7 @@ export default function Dieta({ showModal, onCloseModal }: DietaProps) {
         <div className='modal-overlay' onClick={onCloseModal}>
           <div className='modal' onClick={e => e.stopPropagation()}>
             <div className='modal-actions' style={{flexDirection:'column',marginTop:'0px',gap:20}}>
-              <button className='btn accent lg sc' type="button" onClick={() => fileInputRef.current?.click()}> Importa dieta</button>
+              <button className='btn glass lg sc' type="button" onClick={() => fileInputRef.current?.click()}> Importa dieta</button>
               <button className='btn glass lg sc' type="button" onClick={exportDieta}> Esporta dieta</button>
               <button className='btn danger lg sc' type="button" onClick={() => { setShowDeleteConfirm(true) }}> Elimina dieta</button>
             </div>
