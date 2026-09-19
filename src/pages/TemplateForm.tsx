@@ -240,7 +240,7 @@ export default function TemplateForm() {
         <div style={{display:'flex',gap:10}}>
           <input
             className='page-input'
-            style={{flex:1}}
+            style={{flex:1, minWidth:0}}
             type="text"
             placeholder="Aggiungi alimento..."
             value={ingredientInput}
